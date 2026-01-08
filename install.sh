@@ -92,16 +92,14 @@ for plugin in "${OMZ_PLUGINS[@]}"; do
   fi
 done
 
-# -----------------------------
-# Install theme
-# -----------------------------
+# Theme setup (skip if prepackaged)
 if [[ -n "$OMZ_THEME" && "$OMZ_THEME" == */* ]]; then
-  theme_name="${OMZ_THEME##*/}"
+  theme_name=$(basename "$OMZ_THEME")
   target="$ZSH_CUSTOM/themes/$theme_name"
+
   if [[ ! -d "$target" ]]; then
-    echo "==> Cloning theme: $OMZ_THEME"
-    GIT_TERMINAL_PROMPT=0 git clone --depth=1 "https://github.com/$OMZ_THEME.git" "$target" || \
-      echo "⚠ Could not clone theme $OMZ_THEME, skipping. Check network or URL."
+    echo "==> Copying theme from repo: $theme_name"
+    cp -r "$DOTFILES_DIR/custom-themes/$theme_name" "$target"
   else
     echo "✔ Theme already present: $theme_name"
   fi
@@ -116,6 +114,13 @@ if [[ -e "$ZSHRC_DST" && ! -L "$ZSHRC_DST" ]]; then
 fi
 
 ln -sf "$ZSHRC_SRC" "$ZSHRC_DST"
+
+
+# Link .p10k.zsh
+if [[ -f "$DOTFILES_DIR/.p10k.zsh" ]]; then
+  ln -sf "$DOTFILES_DIR/.p10k.zsh" "$HOME/.p10k.zsh"
+  echo "✔ Linked existing powerlevel10k config"
+fi
 
 # -----------------------------
 # Default shell
