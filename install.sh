@@ -81,16 +81,9 @@ clone_repo() {
 # -----------------------------
 # Install plugins
 # -----------------------------
-for plugin in "${OMZ_PLUGINS[@]}"; do
-  target="$ZSH_CUSTOM/plugins/$(basename "$plugin")"
-  if [[ ! -d "$target" ]]; then
-    echo "==> Cloning plugin: $plugin"
-    GIT_TERMINAL_PROMPT=0 git clone --depth=1 "https://github.com/$plugin.git" "$target" || \
-      echo "⚠ Could not clone plugin $plugin, skipping. Check network or URL."
-  else
-    echo "✔ Plugin already present: $(basename "$plugin")"
-  fi
-done
+git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions
+ 
+git clone https://github.com/zsh-users/zsh-syntax-highlighting.git ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting
 
 # Theme setup (skip if prepackaged)
 if [[ -n "$OMZ_THEME" && "$OMZ_THEME" == */* ]]; then
