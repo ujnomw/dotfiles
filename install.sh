@@ -6,6 +6,7 @@ ZSHRC_SRC="$DOTFILES_DIR/zshrc"
 ZSHRC_DST="$HOME/.zshrc"
 ZSH_DIR="$HOME/.oh-my-zsh"
 ZSH_CUSTOM="$ZSH_DIR/custom"
+P10K_COMMIT_HASH="4f143b7"
 
 echo "==> Oh My Zsh reproducible setup (credential-free)"
 
@@ -48,6 +49,18 @@ install_packages() {
 install_packages
 
 # -----------------------------
+# Git aliases
+# -----------------------------
+
+git config --global alias.co checkout
+git config --global alias.br branch
+git config --global alias.ci commit
+git config --global alias.st status
+
+git config --global alias.hist 'log --oneline --graph --decorate --all'
+echo "Set Git aliases"
+
+# -----------------------------
 # Install Oh My Zsh
 # -----------------------------
 if [[ ! -d "$ZSH_DIR" ]]; then
@@ -58,45 +71,17 @@ fi
 mkdir -p "$ZSH_CUSTOM/plugins" "$ZSH_CUSTOM/themes"
 
 # -----------------------------
-# Parse zshrc declarations
-# -----------------------------
-mapfile -t OMZ_PLUGINS < <(grep '^# OMZ_PLUGIN:' "$ZSHRC_SRC" | awk '{print $3}')
-OMZ_THEME=$(grep '^# OMZ_THEME:' "$ZSHRC_SRC" | awk '{print $3}')
-
-# -----------------------------
-# Clone helper function (shallow, read-only, credential-free)
-# -----------------------------
-clone_repo() {
-  local url="$1"
-  local target="$2"
-
-  if [[ ! -d "$target" ]]; then
-    echo "==> Cloning $url into $target"
-    git clone --depth=1 "$url" "$target"
-  else
-    echo "✔ Already cloned: $target"
-  fi
-}
-
-# -----------------------------
 # Install plugins
 # -----------------------------
 git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions
- 
 git clone https://github.com/zsh-users/zsh-syntax-highlighting.git ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting
+echo "Installed plugins"
 
-# Theme setup (skip if prepackaged)
-if [[ -n "$OMZ_THEME" && "$OMZ_THEME" == */* ]]; then
-  theme_name=$(basename "$OMZ_THEME")
-  target="$ZSH_CUSTOM/themes/$theme_name"
-
-  if [[ ! -d "$target" ]]; then
-    echo "==> Copying theme from repo: $theme_name"
-    cp -r "$DOTFILES_DIR/custom-themes/$theme_name" "$target"
-  else
-    echo "✔ Theme already present: $theme_name"
-  fi
-fi
+# Theme setup 
+git clone https://github.com/romkatv/powerlevel10k.git "${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/themes/powerlevel10k" && \
+    cd "${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/themes/powerlevel10k" && \
+    git switch --detach $P10K_COMMIT_HASH && cd - 
+echo "Set up theme"
 
 # -----------------------------
 # Link zshrc
