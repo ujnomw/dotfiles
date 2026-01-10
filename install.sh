@@ -8,7 +8,34 @@ ZSH_DIR="$HOME/.oh-my-zsh"
 ZSH_CUSTOM="$ZSH_DIR/custom"
 P10K_COMMIT_HASH="4f143b7"
 
-echo "==> Oh My Zsh reproducible setup (credential-free)"
+VIMRC_DST="$HOME/.vimrc"
+
+echo "==>  Dotfiles setup"
+
+set_tzdata() {
+    TZ=${1:-Etc/UTC}
+
+    if [ -f /etc/debian_version ]; then
+        # Debian/Ubuntu
+        export DEBIAN_FRONTEND=noninteractive
+        apt-get update -y
+        # Preconfigure tzdata so install is non-interactive
+        echo "tzdata tzdata/Areas select $(echo $TZ | cut -d'/' -f1)" | debconf-set-selections
+        echo "tzdata tzdata/Zones/$(echo $TZ | cut -d'/' -f1) select $(echo $TZ | cut -d'/' -f2)" | debconf-set-selections
+        apt-get install -y tzdata
+    elif [ -f /etc/redhat-release ]; then
+        # RHEL/CentOS/Fedora
+        timedatectl set-timezone "$TZ"
+    elif [ "$(uname)" = "Darwin" ]; then
+        # macOS
+        sudo systemsetup -settimezone "$TZ" >/dev/null
+    else
+        echo "Unsupported system; please set TZ manually."
+    fi
+}
+
+
+set_tzdata
 
 # -----------------------------
 # Platform detection + package install
@@ -28,17 +55,17 @@ install_packages() {
       echo "Homebrew not found, installing..."
       /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
     fi
-    brew install git curl zsh || true
+    brew install git curl zsh vim || true
 
   elif [[ -f /etc/debian_version ]]; then
     $SUDO apt update
-    $SUDO apt install -y git curl zsh
+    $SUDO apt install -y git curl zsh vim
 
   elif [[ -f /etc/redhat-release ]]; then
-    $SUDO yum install -y git curl zsh
+    $SUDO yum install -y git curl zsh vim
 
   elif [[ -f /etc/alpine-release ]]; then
-    $SUDO apk add --no-cache git curl zsh
+    $SUDO apk add --no-cache git curl zsh vim
 
   else
     echo "⚠ Unsupported OS: $OSTYPE. Please install git, curl, zsh manually."
@@ -107,5 +134,16 @@ if [[ "$SHELL" != "$(command -v zsh)" ]]; then
   echo "Setting zsh as default shell"
   chsh -s "$(command -v zsh)"
 fi
+
+
+# -----------------------------
+# Link Vim config
+# -----------------------------
+if [[ -e "$VIMRC_DST" && ! -L "$VIMRC_DST" ]]; then
+  echo "Backing .vimrc to $VIMRC_DST.backup"
+  mv "$VIMRC_DST" "$VIMRC_DST.backup"
+fi
+
+ln -sf "$DOTFILES_DIR/editors/.vimrc" "$VIMRC_DST"
 
 echo "✅ Done. Restart shell."
