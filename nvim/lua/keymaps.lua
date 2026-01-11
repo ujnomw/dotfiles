@@ -22,7 +22,7 @@ keymap('n', '<leader>q', ':bdelete<CR>', opts)
 keymap('n', '<leader>f', ':vimgrep // **/*<Left><Left><Left>', opts)
 
 -- Git status (fugitive)
-keymap('n', '<leader>g', ':Git<CR>', opts)
+-- keymap('n', '<leader>g', ':Git<CR>', opts)
 
 -- Toggle terminal
 keymap('n', '<leader>t', ':terminal<CR>', opts)
@@ -49,7 +49,7 @@ keymap('n', '<leader>0', ':Lexplore<CR>', opts)
 keymap('n', '<leader>1', ':1wincmd w<CR>', opts)
 keymap('n', '<leader>2', ':2wincmd w<CR>', opts)
 keymap('n', '<leader>3', ':3wincmd w<CR>', opts)
-
+-- sdf
 -- ======================
 -- Buffers
 -- ======================
