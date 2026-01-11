@@ -1,6 +1,7 @@
 return { -- Autocompletion
   'saghen/blink.cmp',
   event = 'VimEnter',
+  priority = 100,
   version = '1.*',
   dependencies = {
     -- Snippet Engine

@@ -3,6 +3,7 @@ return {
     'numToStr/Comment.nvim',
     -- Lazy‑load when editing buffers (optional)
     event = 'VeryLazy',
+    priority = 100,
     opts = {
       -- You can override default mappings here if you want
       toggler = {

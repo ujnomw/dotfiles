@@ -1,6 +1,8 @@
 return {
   -- Main LSP Configuration
   'neovim/nvim-lspconfig',
+  event = 'VimEnter',
+  priority = 0,
   dependencies = {
     -- Automatically install LSPs and related tools to stdpath for Neovim
     -- Mason must be loaded before its dependents so we need to set it up here.
@@ -131,8 +133,8 @@ return {
         if
           client
           and client_supports_method(
-       	    client,
-       	    vim.lsp.protocol.Methods.textDocument_documentHighlight,
+            client,
+            vim.lsp.protocol.Methods.textDocument_documentHighlight,
        	    event.buf
           )
         then
@@ -169,7 +171,7 @@ return {
         if
           client
           and client_supports_method(
-       	    client,
+            client,
        	    vim.lsp.protocol.Methods.textDocument_inlayHint,
        	    event.buf
           )
@@ -259,6 +261,15 @@ return {
       },
     }
 
+    vim.api.nvim_create_autocmd('VimEnter', {
+      callback = function()
+        for _, client in pairs(vim.lsp.get_active_clients()) do
+          if client.name == 'lua_ls' then
+            vim.lsp.buf_notify(0, 'workspace/didChangeWatchedFiles', {})
+          end
+        end
+      end,
+    })
     -- Ensure the servers and tools above are installed
     --
     -- To check the current status of installed tools and/or manually install

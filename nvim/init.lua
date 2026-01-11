@@ -23,7 +23,8 @@ require('lazy').setup({
   require('plugins.colortheme'),
   require('plugins.which-key'),
   require('plugins.telescope'),
-  require('plugins.lsp'),
   require('plugins.treesitter'),
   require('plugins.autocomplete'),
+  require('plugins.lazy-dev'),
+  require('plugins.lsp'),
 })
