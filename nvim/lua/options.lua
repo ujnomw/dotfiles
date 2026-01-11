@@ -6,7 +6,7 @@
 vim.opt.number = true
 
 -- Use system clipboard
-vim.opt.clipboard = "unnamedplus"
+vim.opt.clipboard = 'unnamedplus'
 
 -- Search behavior
 vim.opt.hlsearch = true
@@ -16,7 +16,7 @@ vim.opt.incsearch = true
 vim.opt.compatible = false
 
 -- Leader key
-vim.g.mapleader = " "
+vim.g.mapleader = ' '
 vim.g.maplocalleader = ' '
 
 vim.o.mouse = 'a'
@@ -24,7 +24,7 @@ vim.o.mouse = 'a'
 vim.schedule(function()
   vim.o.clipboard = 'unnamedplus'
 end)
-
+vim.keymap.set('n', '<Esc>', '<cmd>nohlsearch<CR>')
 -- Enable break indent
 vim.o.breakindent = true
 
