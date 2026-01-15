@@ -101,6 +101,9 @@ return {
         --  the definition of its *type*, not where it was *defined*.
         map('grt', require('telescope.builtin').lsp_type_definitions, '[G]oto [T]ype Definition')
 
+        -- Hover over word
+        map('gh', vim.lsp.buf.hover, '[G]et [H]over')
+
         -- This function resolves a difference between neovim nightly (version 0.11) and stable (version 0.10)
         ---@param client vim.lsp.Client
         ---@param method vim.lsp.protocol.Method
@@ -134,12 +137,12 @@ return {
           client
           and client_supports_method(
             client,
-            vim.lsp.protocol.Methods.textDocument_documentHighlight,
-       	    event.buf
+       	    vim.lsp.protocol.Methods.textDocument_documentHighlight,
+            event.buf
           )
         then
           local highlight_augroup =
-       	    vim.api.nvim_create_augroup('kickstart-lsp-highlight', { clear = false })
+            vim.api.nvim_create_augroup('kickstart-lsp-highlight', { clear = false })
           vim.api.nvim_create_autocmd({ 'CursorHold', 'CursorHoldI' }, {
             buffer = event.buf,
             group = highlight_augroup,
@@ -172,8 +175,8 @@ return {
           client
           and client_supports_method(
             client,
-       	    vim.lsp.protocol.Methods.textDocument_inlayHint,
-       	    event.buf
+            vim.lsp.protocol.Methods.textDocument_inlayHint,
+            event.buf
           )
         then
           map('<leader>th', function()
