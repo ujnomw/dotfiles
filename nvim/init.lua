@@ -3,6 +3,7 @@ require('keymaps')
 
 -- [[ Install `lazy.nvim` plugin manager ]]
 --    See `:help lazy.nvim.txt` or https://github.com/folke/lazy.nvim for more info
+
 local lazypath = vim.fn.stdpath('data') .. '/lazy/lazy.nvim'
 if not (vim.uv or vim.loop).fs_stat(lazypath) then
   local lazyrepo = 'https://github.com/folke/lazy.nvim.git'
@@ -25,6 +26,7 @@ require('lazy').setup({
   require('plugins.telescope'),
   require('plugins.treesitter'),
   require('plugins.autocomplete'),
+  require('plugins.autoformat'),
   require('plugins.lazy-dev'),
   require('plugins.lualine'),
   require('plugins.lsp'),
