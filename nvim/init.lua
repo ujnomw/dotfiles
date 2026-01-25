@@ -30,4 +30,8 @@ require('lazy').setup({
   require('plugins.lazy-dev'),
   require('plugins.lualine'),
   require('plugins.lsp'),
+  require('plugins.new-dap'),
+  -- require('plugins.dap'),
+  -- require('plugins.dap-cpp'),
+  require('plugins.dap-keymaps'),
 })
